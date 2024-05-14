@@ -1,0 +1,9 @@
+﻿@page "/p/{slug}"
+@model BigBadBlog.Web.Pages.PostModel
+@{
+}
+
+
+<h5 class="card-title">@Model.Post.Metadata.Title</h5>
+<h6>by @Model.Post.Metadata.Author on @Model.Post.Metadata.Date.ToShortDateString()</h6>
+<p class="card-text">@Html.Raw(Markdig.Markdown.ToHtml(Model.Post.Content, Model.MarkdownPipeline))</p>
