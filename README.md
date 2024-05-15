@@ -5,4 +5,4 @@ The Big Bad Blog is a tutorial that demonstrates how to take a simple blog websi
 
 | Module |
 | --- |
-| [1 - Introducing the Blog and Aspire](docs/1-Introduction) |
+| [1 - Introducing the Blog and Aspire](docs/1-Introduction.md) |
