@@ -1,6 +1,6 @@
 # 1 - Introducing the Big Bad Blog and Aspire
 
-_The source code for this module starts with the folder [0-Start](../0-Start/) and the competed state at the end of this module is available in the folder [1-Introducing Aspire](../1-IntroducingAspire)_
+_The source code for this module starts with the folder [0-Start](../0-Start/) and the completed state at the end of this module is available in the folder [1-Introducing Aspire](../1-IntroducingAspire)_
 
 .NET Aspire is not a .NET application framework in the traditional sense like WPF, Blazor, or .NET MAUI.  .NET Aspire is a tech-stack that enables development of distributed applications with support for the four-pillars of cloud native development: deployment, monitoring, tracing, and service discovery.  .NET Aspire makes your development experience better, and hands off a deployment configuration that can be used by other tools to deploy to Azure, Kubernetes, or AWS (as of May 2024)
 
