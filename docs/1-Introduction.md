@@ -228,7 +228,7 @@ Next, we're going to add resiliency, telemetry collection, logging, and health c
 Let's add this as a new project to the solution.  In Visual Studio, add a new project of type **.NET Aspire Service Defaults** and call it `BigBadBlog.ServiceDefaults`.  At the command-line, in the root project folder next to the `BigBadBlog.sln` file, we can create this project with the commands:
 
 ```
-dotnet add aspire-servicedefaults -o BigBadBlog.ServiceDefaults
+dotnet new aspire-servicedefaults -o BigBadBlog.ServiceDefaults
 dotnet sln add BigBadBlog.ServiceDefaults
 ```
 
