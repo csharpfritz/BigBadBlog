@@ -1,5 +1,5 @@
-# BigBadBlog
-The Big Bad Blog is a tutorial that demonstrates how to take a simple blog website with articles in markdown on disk, and make it into a large CMS.
+# The Big Bad Blog
+The Big Bad Blog is a tutorial series that could be presented as a worksho that demonstrates how to take a simple blog website with articles in markdown on disk, and make it into a large CMS.
 
 ## How this got started...
 
