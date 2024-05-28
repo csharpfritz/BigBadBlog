@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add Aspire service defaults
 builder.AddServiceDefaults();
 
+builder.AddPostgresDatabaseServices();
+
 // Add OutputCache service	
 builder.AddRedisOutputCache(ServiceNames.OUTPUTCACHE);
 builder.Services.AddOutputCache(options =>

@@ -13,10 +13,11 @@ namespace BigBadBlog;
 public static class Program_Extensions
 {
 
-	public static IHostApplicationBuilder? AddDatabaseServices(this IHostApplicationBuilder? host)
+	public static IHostApplicationBuilder? AddPostgresDatabaseServices(this IHostApplicationBuilder? host)
 	{
 
 		host.AddNpgsqlDbContext<ApplicationDbContext>(ServiceNames.DATABASE_POSTS.NAME);
+			
 
 		return host;
 
