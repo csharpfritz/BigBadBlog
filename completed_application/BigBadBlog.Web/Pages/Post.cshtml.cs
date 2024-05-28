@@ -1,3 +1,4 @@
+using BigBadBlog.Common.Data;
 using BigBadBlog.Web.Data;
 using Markdig;
 using Microsoft.AspNetCore.Mvc;
