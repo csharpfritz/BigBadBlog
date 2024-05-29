@@ -23,10 +23,8 @@ builder.Services.AddOutputCache(options =>
 	options.AddPolicy("Post", policy => policy.Tag("Post").SetVaryByRouteValue("slug").Expire(TimeSpan.FromSeconds(30)));
 });
 
-// Add my repository for posts
-builder.Services.AddTransient<IPostRepository, MarkdownPostRepository>();
-
 // Add services to the container.
+builder.AddIdentityServices();
 
 builder.Services.AddRazorPages();
 
@@ -59,5 +57,19 @@ app.UseAuthorization();
 app.UseOutputCache();
 
 app.MapRazorPages();
+
+var mdRepo = new MarkdownPostRepository();
+var pgRepo = app.Services.CreateScope().ServiceProvider.GetRequiredService<IPostRepository>();
+
+var pgPosts = await pgRepo.GetPostsAsync(10, 1);
+
+if (!pgPosts.Any())
+{
+var existingPosts = await mdRepo.GetPostsAsync(10,1);
+foreach (var post in existingPosts)
+{
+	await pgRepo.AddPostAsync(post.Item1, post.Item2);
+}
+}
 
 app.Run();

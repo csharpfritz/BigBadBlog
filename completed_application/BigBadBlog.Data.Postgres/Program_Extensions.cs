@@ -1,6 +1,8 @@
-﻿using BigBadBlog.Data.Postgres;
+﻿using BigBadBlog.Common.Data;
+using BigBadBlog.Data.Postgres;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,7 @@ public static class Program_Extensions
 
 		host.AddNpgsqlDbContext<ApplicationDbContext>(ServiceNames.DATABASE_POSTS.NAME);
 			
+		host.Services.AddScoped<IPostRepository, PgPostRepository>();
 
 		return host;
 
@@ -26,13 +29,9 @@ public static class Program_Extensions
 	public static IHostApplicationBuilder? AddIdentityServices(this IHostApplicationBuilder? builder)
 	{
 
-		var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-		//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-		//		options.UseSqlite(connectionString));
-		//builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-		//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-		//		.AddEntityFrameworkStores<ApplicationDbContext>();
+		builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+				.AddEntityFrameworkStores<ApplicationDbContext>();
 
 		return builder;
 

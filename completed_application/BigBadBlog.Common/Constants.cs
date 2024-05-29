@@ -15,9 +15,11 @@ public static class ServiceNames
 	public static class DATABASE_POSTS {
 
 		public const string SERVERNAME = "posts";
-		public const string NAME = "post_database";
+		public const string NAME = "post-database";
 
 	}
+
+	public const string MIGRATION = "database-migration";
 
 	public const string OUTPUTCACHE = "outputcache";
 

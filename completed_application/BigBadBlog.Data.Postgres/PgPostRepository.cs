@@ -49,6 +49,7 @@ internal class PgPostRepository : IPostRepository
 	{
 		var post = (PgPost)(metadata, content);
 
+		post.Date = new DateTime(DateTime.Now.Ticks, DateTimeKind.Utc);
 		_context.Posts.Add(post);
 
 		await _context.SaveChangesAsync();

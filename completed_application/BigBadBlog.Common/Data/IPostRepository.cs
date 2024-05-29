@@ -10,4 +10,6 @@ public interface IPostRepository
 
 	Task<(PostMetadata,string)> GetPostAsync(string slug);
 
+	Task AddPostAsync(PostMetadata metadata, string content);
+
 }

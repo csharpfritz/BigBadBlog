@@ -31,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BigBadBlog.Common\BigBadBlog.Common.csproj" />
     <ProjectReference Include="..\BigBadBlog.ServiceDefaults\BigBadBlog.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\BigBadBlog.Data.Postgres\BigBadBlog.Data.Postgres.csproj" />
   </ItemGroup>
 
 </Project>

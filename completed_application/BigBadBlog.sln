@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigBadBlog.Data.Postgres", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigBadBlog.Common", "BigBadBlog.Common\BigBadBlog.Common.csproj", "{C424B34A-E254-440B-97F1-D9F9214A8386}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigBadBlog.Service.DatabaseMigration", "BigBadBlog.Service.DatabaseMigration\BigBadBlog.Service.DatabaseMigration.csproj", "{6E34327C-E41E-4678-8A80-9255F5A9B9E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C424B34A-E254-440B-97F1-D9F9214A8386}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C424B34A-E254-440B-97F1-D9F9214A8386}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C424B34A-E254-440B-97F1-D9F9214A8386}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E34327C-E41E-4678-8A80-9255F5A9B9E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E34327C-E41E-4678-8A80-9255F5A9B9E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E34327C-E41E-4678-8A80-9255F5A9B9E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E34327C-E41E-4678-8A80-9255F5A9B9E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

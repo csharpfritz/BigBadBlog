@@ -33,6 +33,11 @@ public class MarkdownPostRepository : IPostRepository
 
 	}
 
+	public Task AddPostAsync(PostMetadata metadata, string content)
+	{
+		throw new NotImplementedException();
+	}
+
 	public Task<(PostMetadata, string)> GetPostAsync(string slug)
 	{
 
