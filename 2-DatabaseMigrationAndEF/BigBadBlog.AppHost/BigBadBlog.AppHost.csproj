@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>3e9797fc-af6f-46a6-a999-4ebc8157b5de</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.1" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="8.0.1" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BigBadBlog.Common\BigBadBlog.Common.csproj" IsAspireProjectResource="false" />
+    <ProjectReference Include="..\BigBadBlog.Web\BigBadBlog.Web.csproj" />
+    <ProjectReference Include="..\BigBadBlog.Service.DatabaseMigration\BigBadBlog.Service.DatabaseMigration.csproj" />
+  </ItemGroup>
+
+</Project>
