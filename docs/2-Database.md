@@ -2,13 +2,11 @@
 
 ## Introducing database providers
 
-### Get Started with Postgres
+### Add Postgres to the system
 
-## Adding Entity Framework to the blog project
+## Add Entity Framework and the data project
 
-### Database Migration Project
-
-### Database Migration Service
+## Introducing Database Migration Service
 
 ## Migrating Data
 
