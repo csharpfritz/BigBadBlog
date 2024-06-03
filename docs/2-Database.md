@@ -26,6 +26,33 @@ Microsoft Learn has an exhausitve list of the [current Aspire components](https:
 
 ### Add Postgres to the system
 
+We can introduce a Postgres database to our application system by adding a project reference and a few lines into the `BigBadBlog.AppHost/Program.cs` file.
+
+Add the `Aspire.Hosting.PostgreSQL` package to the `BigBadBlog.AppHost` project.  You can run this command in the AppHost project folder:
+
+```shell
+dotnet add package Aspire.Hosting.PostgreSQL
+```
+
+In the `Program.cs` file of that project, let's introduce the database:
+
+```csharp
+var builder = DistributedApplication.CreateBuilder(args);
+
+var db = builder.AddPostgres("bigbad-db");
+...
+```
+
+Running the application now shows the **bigbad-db** database running as a postgres container:
+
+![Dashboard with first appearance of the database](img/2-DashboardWithDb-1.png)
+
+
+
+
+
+
+
 ## Aside: System Constants
 
 ## Add Entity Framework and the data project
