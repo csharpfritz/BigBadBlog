@@ -22,6 +22,12 @@ var cache = builder.AddRedis(ServiceNames.OUTPUTCACHE, 65028)
 
 #endregion
 
+#region Post API
+
+var api = builder.AddProject("postApi", @"..\..\..\BigBadBlog.PostService\BigBadBlog.PostService.Api\BigBadBlog.PostService.Api.csproj");
+
+#endregion
+
 #region Web Application
 
 var webApp = builder.AddProject<BigBadBlog_Web>("web")
