@@ -412,4 +412,4 @@ We have come a LONG way in using .NET Aspire, and we're JUST getting started!  I
 
 ---
 
-Next Module
+[Next Module: Database and Entity Framework](2-Database.md)
