@@ -24,9 +24,9 @@ Among the database components available at the time of writing are:
 
 Microsoft Learn has an exhausitve list of the [current Aspire components](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/components-overview?tabs=dotnet-cli#available-components) available.
 
-### Add Postgres to the system
+### Add PostgreSQL to the system
 
-We can introduce a Postgres database to our application system by adding a project reference and a few lines into the `BigBadBlog.AppHost/Program.cs` file.
+We can introduce a PostgreSQL database to our application system by adding a project reference and a few lines into the `BigBadBlog.AppHost/Program.cs` file.
 
 Add the `Aspire.Hosting.PostgreSQL` package to the `BigBadBlog.AppHost` project.  You can run this command in the AppHost project folder:
 
@@ -43,11 +43,11 @@ var db = builder.AddPostgres("bigbad-db");
 ...
 ```
 
-Running the application now shows the **bigbad-db** database running as a postgres container:
+Running the application now shows the **bigbad-db** database running as a PostgreSQL container:
 
 ![Dashboard with first appearance of the database](img/2-DashboardWithDb-1.png)
 
-That's nice, we have a Postgres container with a server.  Servers need databases and I'd like to be able to administer that database so that I can peek in there to look at the data.
+That's nice, we have a PostgreSQL container with a server.  Servers need databases and I'd like to be able to administer that database so that I can peek in there to look at the data.
 
 Finally, I need to pass that database into my web application so that we can connect to it with Entity Framework.
 
@@ -78,7 +78,7 @@ Let's run it and take a look at the dashboard now:
 
 We have a _SLIGHT_ problem with this configuration: the database will start and assign a random password to the default postgres user on every restart of the Aspire stack.  This is counter to the purpose of our decision to create a data volume that will persist content between restarts.  We can force a password on the database by passing in a parameter from the configuration of our AppHost project.  
 
-Let's add a parameter and the appropriate configuration to `appSettings.json` to configure our postgres database with a password.
+Let's add a parameter and the appropriate configuration to `appSettings.json` to configure our PostgreSQL database with a password.
 
 In `AppHost/Program.cs` we'll define a parameter and pass that parameter as the password argument for our database declaration:
 
@@ -160,7 +160,262 @@ This will make it easier when we connect the website to the database and configu
 
 ## Add Entity Framework and the data project
 
+The next steps are _typically_ to configure the Entity Framework database context and resources in the web project.  I want to take a step away from that, to isolate those resources in setting up for the next steps in this project.
+
+Let's allocate another class library project in the solution for the interactions with our PostgreSQL database.
+
+```
+dotnet new classlib -o BigBadBlog.Data.Postgres
+```
+
+I'll move the web application's `Data\ApplicationDbContext.cs` to this project so that the security database interactions are isolated with the PostgreSQL database libraries we'll place in this project.
+
+To support and configure the `IdentityDbContext` type that the `ApplicationDbContext` inherits from, we'll need to add two references to this project:
+
+```
+dotnet add reference Microsoft.AspNetCore.Identity.EntityFrameworkCore
+dotnet add reference Microsoft.AspNetCore.Identity.UI
+```
+
+Let's centralize our abstractions for working with the database repository.  Move the `Data/IPostRepository.cs` and `Data/PostMetadata.cs` files into the `BigBadBlog.Common` project so that we can reference that interface and `PostMetadata` object from our `BigBadBlog.Data.Postgres` project and the `BigBadBlog.Web` projects.  We'll add a reference to the Common project with this command executed in both the `BigBadBlog.Data.Postgres` and `BigBadBlog.Web` folder:
+
+```
+dotnet add reference ../BigBadBlog.Common
+```
+
+### Working with Entity Framework  
+
+Let's define a `PgPost` object that contains information similar to the `PostMetadata` record, but appropriate for storage in PostgreSQL.
+
+```csharp
+public class PgPost
+{
+
+	[Key]
+	public int Id { get; set; }
+
+	[Required, MaxLength(100)]
+	public string Title { get; set; }
+
+	[Required, MaxLength(100)]
+	public string Author { get; set; }
+
+	[Required]
+	public DateTime Date { get; set; }
+
+	[Required]
+	public string Content { get; set; }
+
+	[Required, MaxLength(150)]
+	public string Slug { get; set; }
+
+	// explicit conversion to PostMetadata
+	public static explicit operator PostMetadata(PgPost post)
+	{
+		return new PostMetadata("", post.Title, post.Author, post.Date);
+	}
+
+	// explicit conversation from PostMetadata
+	public static explicit operator PgPost((PostMetadata, string) post)
+	{
+		return new PgPost
+		{
+			Title = post.Item1.Title,
+			Author = post.Item1.Author,
+			Date = post.Item1.Date,
+			Content = post.Item2,
+			Slug = post.Item1.Slug
+		};
+	}
+
+}
+```
+
+I've also included two operator methods to help convert to and from the `PostMetadata` type that our website uses.
+
+We can now reference the `PgPost` inside our `ApplicationDbContext` Entity Framework context so that we can read and write `PgPost` data in the PostgreSQL database. 
+
+```csharp
+public class ApplicationDbContext : IdentityDbContext
+{
+	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+			: base(options) { }
+
+	public DbSet<PgPost> Posts { get; set; }
+
+	protected override void OnModelCreating(ModelBuilder builder)
+	{
+
+		// Add an index to the PgPost slug column
+		builder.Entity<PgPost>()
+			.HasIndex(p => p.Slug)
+			.IsUnique();
+
+		// Add an index to the PgPost date column
+		builder.Entity<PgPost>()
+			.HasIndex(p => p.Date);
+
+		base.OnModelCreating(builder);
+	}
+
+}
+```
+
+Let's wrap the ApplicationDbContext with a PostgreSQL-specific repository called `PgPostRepository`, and I'll generate most of the code using GitHub copilot:
+
+```csharp
+namespace BigBadBlog.Data.Postgres;
+
+internal class PgPostRepository : IPostRepository
+{
+	private readonly ApplicationDbContext _context;
+
+	public PgPostRepository(ApplicationDbContext context)
+	{
+		_context = context;
+	}
+
+	public async Task<(PostMetadata, string)> GetPostAsync(string slug)
+	{
+		var post = await _context.Posts
+			.Where(p => p.Slug == slug)
+			.Select(p => (PostMetadata)p)
+			.FirstOrDefaultAsync();
+
+		if (post == default)
+		{
+			return default;
+		}
+
+		var content = await _context.Posts
+			.Where(p => p.Slug == slug)
+			.Select(p => p.Content)
+			.FirstOrDefaultAsync();
+
+		return (post, content);
+	}
+
+	public async Task<IEnumerable<(PostMetadata,string)>> GetPostsAsync(int count, int page)
+	{
+		// fetch the posts from the database and convert them to PostMetadata
+		var posts = await _context.Posts
+			.OrderByDescending(p => p.Date)
+			.Skip(count * (page - 1))
+			.Take(count)
+			.ToListAsync();
+
+		return posts.Select(p => ((PostMetadata)p, p.Content));
+
+	}
+
+	public async Task AddPostAsync(PostMetadata metadata, string content)
+	{
+		var post = (PgPost)(metadata, content);
+
+		post.Date = new DateTime(DateTime.Now.Ticks, DateTimeKind.Utc);
+		_context.Posts.Add(post);
+
+		await _context.SaveChangesAsync();
+	}
+
+	public async Task UpdatePostAsync(PostMetadata metadata, string content)
+	{
+		var post = (PgPost)(metadata, content);
+
+		_context.Posts.Update(post);
+
+		await _context.SaveChangesAsync();
+	}
+
+	public async Task DeletePostAsync(string slug)
+	{
+		var post = await _context.Posts
+			.Where(p => p.Slug == slug)
+			.FirstOrDefaultAsync();
+
+		if (post != default)
+		{
+			_context.Posts.Remove(post);
+			await _context.SaveChangesAsync();
+		}
+	}
+}
+```
+
+We'll next add the Npgsql driver for Aspire to this project as a NuGet package:
+
+```
+dotnet add package Aspire.Npgsql.EntityFrameworkCore.PostgreSQL
+```
+
+This package contains information to optimize the connection for resiliency and provide logging using OpenTelemetry.
+
+We need to connect this context to our database provider and connection string.  We normally do this in `Program.cs` but let's keep this isolated from the `Web` project.
+
+Instead, we'll add a class file to the `BigBadBlog.Data.Postgres` project called `Program_Extensions.cs` that will contain some extension methods for configuring the web application.
+
+We'll add the following content to this new file in order to configure the database context and make it available for the ASP.NET Core Identity UI:
+
+```csharp
+public static class Program_Extensions
+{
+
+	public static IHostApplicationBuilder? AddPostgresDatabaseServices(this IHostApplicationBuilder? host)
+	{
+
+		// Reuse the constant for the database name we saved
+		// in the common project earlier
+		host.AddNpgsqlDbContext<ApplicationDbContext>(ServiceNames.DATABASE_POSTS.NAME);
+			
+		host.Services.AddScoped<IPostRepository, PgPostRepository>();
+
+		return host;
+
+	}
+
+	public static IHostApplicationBuilder? AddIdentityServices(this IHostApplicationBuilder? builder)
+	{
+
+
+		builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+				.AddEntityFrameworkStores<ApplicationDbContext>();
+
+		return builder;
+
+	}
+
+}
+```
+
+### Updating the web project
+
+We can now go back to the Web project and add a reference to the Postgres project:
+
+```
+dotnet add reference ../BigBadBlog.Data.Postgres
+```
+
+We can then activate the PostgreSQL features with these updates in our `Program.cs` file:
+
+```csharp
+...
+// Add Aspire service defaults
+builder.AddServiceDefaults();
+
+builder.AddPostgresDatabaseServices();
+
+// Add services to the container.
+builder.AddIdentityServices();
+...
+```
+
+At this point, our entire solution should build... but we don't have any objects in our database yet.  For that, we need database migrations.
+
 ## Introducing Database Migration Service
+
+
 
 ## Migrating Data
 
+---
+[Previous Module - 1 Introduction](1-Introduction.md) - Next Module

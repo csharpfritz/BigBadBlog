@@ -14,8 +14,8 @@ public static class ServiceNames
 	/// </summary>
 	public static class DATABASE_POSTS {
 
-		public const string SERVERNAME = "posts";
-		public const string NAME = "post-database";
+		public const string SERVERNAME = "bigbad-db";
+		public const string NAME = "bigbad-database";
 
 	}
 
