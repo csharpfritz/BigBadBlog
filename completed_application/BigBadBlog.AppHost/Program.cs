@@ -24,7 +24,13 @@ var cache = builder.AddRedis(ServiceNames.OUTPUTCACHE, 65028)
 
 #region Post API
 
-var api = builder.AddProject("postApi", @"..\..\..\BigBadBlog.PostService\BigBadBlog.PostService.Api\BigBadBlog.PostService.Api.csproj");
+var postDb = builder.AddMongoDB("postDb")
+	.WithDataVolume()
+	.WithMongoExpress()
+	.AddDatabase("posts-database");
+
+var api = builder.AddProject("postApi", @"..\..\..\BigBadBlog.PostService\BigBadBlog.PostService.Api\BigBadBlog.PostService.Api.csproj")
+	.WithReference(postDb);
 
 #endregion
 
@@ -33,6 +39,7 @@ var api = builder.AddProject("postApi", @"..\..\..\BigBadBlog.PostService\BigBad
 var webApp = builder.AddProject<BigBadBlog_Web>("web")
 	.WithReference(cache)
 	.WithReference(db)
+	.WithReference(api)
 	.WithExternalHttpEndpoints();
 
 #endregion

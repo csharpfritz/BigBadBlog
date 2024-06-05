@@ -6,6 +6,7 @@ using BigBadBlog.Web.Data;
 using System.Net;
 using BigBadBlog;
 using BigBadBlog.Common.Data;
+using BigBadBlog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,15 @@ builder.Services.AddOutputCache(options =>
 
 // Add services to the container.
 builder.AddIdentityServices();
+
+builder.Services.AddHttpClient<PostApi>(client =>
+{
+	// This URL uses "https+http://" to indicate HTTPS is preferred over HTTP.
+	// Learn more about service discovery scheme resolution at https://aka.ms/dotnet/sdschemes.
+	client.BaseAddress = new("https+http://postApi");
+});
+
+builder.Services.AddScoped<IPostRepository, PostMicroserviceRepository>();
 
 builder.Services.AddRazorPages();
 
@@ -54,7 +64,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.UseOutputCache();
+//app.UseOutputCache();
 
 app.MapRazorPages();
 
