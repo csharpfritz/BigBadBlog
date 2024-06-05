@@ -15,3 +15,4 @@ This workshop is our walkthrough of helping Arthur to take his simple blog engin
 | --- |
 | [1 - Introducing the Blog and Aspire](docs/1-Introduction.md) |
 | [2 - Working with Databases and Entity Framework](docs/2-Database.md) |
+| [3 - Microserices and MongoDB](docs/3-Microservices.md) |
