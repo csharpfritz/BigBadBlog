@@ -1,0 +1,226 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "BigBadBlog.PostService.Api",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/Post": {
+      "get": {
+        "tags": [
+          "Post"
+        ],
+        "operationId": "GetAllPosts",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Post"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Post"
+        ],
+        "operationId": "CreatePost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Post/{slug}": {
+      "get": {
+        "tags": [
+          "Post"
+        ],
+        "operationId": "GetPostBySlug",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Post"
+        ],
+        "operationId": "UpdatePost",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Post"
+        ],
+        "operationId": "DeletePost",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ObjectId": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "machine": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true,
+            "deprecated": true
+          },
+          "pid": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true,
+            "deprecated": true
+          },
+          "increment": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true,
+            "deprecated": true
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Post": {
+        "required": [
+          "author",
+          "date",
+          "slug",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "author": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "content": {
+            "type": "string",
+            "nullable": true
+          },
+          "slug": {
+            "type": "string",
+            "nullable": true
+          },
+          "_id": {
+            "$ref": "#/components/schemas/ObjectId"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

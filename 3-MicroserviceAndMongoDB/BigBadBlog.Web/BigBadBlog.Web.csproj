@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-BigBadBlog.Web-c0b48993-c310-4519-8acf-b5b7242032d2</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="8.0.1" />
+    <PackageReference Include="Markdig" Version="0.37.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="7.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.18.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Posts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <OpenApiReference Include="..\swagger.json" CodeGenerator="NSwagCSharp" ClassName="PostApi" Link="OpenAPIs\swagger.json" Options="/UseBaseUrl:false /GenerateClientInterfaces:true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BigBadBlog.Common\BigBadBlog.Common.csproj" />
+    <ProjectReference Include="..\BigBadBlog.ServiceDefaults\BigBadBlog.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\BigBadBlog.Data.Postgres\BigBadBlog.Data.Postgres.csproj" />
+  </ItemGroup>
+
+</Project>
