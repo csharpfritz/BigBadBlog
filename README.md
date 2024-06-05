@@ -14,3 +14,4 @@ This workshop is our walkthrough of helping Arthur to take his simple blog engin
 | Module |
 | --- |
 | [1 - Introducing the Blog and Aspire](docs/1-Introduction.md) |
+| [2 - Working with Databases and Entity Framework](docs/2-Database.md) |

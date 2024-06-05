@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-BigBadBlog.Service.DatabaseMigration-a0576ffb-d599-4117-9441-d034f300a0d7</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BigBadBlog.Data.Postgres\BigBadBlog.Data.Postgres.csproj" />
+    <ProjectReference Include="..\BigBadBlog.ServiceDefaults\BigBadBlog.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\BigBadBlog.Common\BigBadBlog.Common.csproj" />
+  </ItemGroup>
+</Project>
