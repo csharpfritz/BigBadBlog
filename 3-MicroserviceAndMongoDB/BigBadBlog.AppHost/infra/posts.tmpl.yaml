@@ -1,0 +1,52 @@
+api-version: 2024-02-02-preview
+location: {{ .Env.AZURE_LOCATION }}
+identity:
+  type: UserAssigned
+  userAssignedIdentities:
+    ? "{{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}"
+    : {}
+properties:
+  environmentId: {{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_ID }}
+  configuration:
+    activeRevisionsMode: single
+    runtime:
+      dotnet:
+        autoConfigureDataProtection: true
+    ingress:
+      external: false
+      targetPort: {{ targetPortOrDefault 5432 }}
+      transport: tcp
+      allowInsecure: false
+    registries:
+      - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
+        identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
+    secrets:
+      - name: postgres-password
+        value: '{{ securedParameter "postgresspassword" }}'
+  template:
+    volumes:
+      - name: posts-bigbadblogapphost-posts-data
+        storageType: AzureFile
+        storageName: {{ .Env.SERVICE_POSTS_VOLUME_BIGBADBLOGAPPHOST_POSTS_DATA_NAME }} 
+    containers:
+      - image: {{ .Image }}
+        name: posts
+        env:
+          - name: AZURE_CLIENT_ID
+            value: {{ .Env.MANAGED_IDENTITY_CLIENT_ID }}
+          - name: POSTGRES_HOST_AUTH_METHOD
+            value: scram-sha-256
+          - name: POSTGRES_INITDB_ARGS
+            value: --auth-host=scram-sha-256 --auth-local=scram-sha-256
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PASSWORD
+            secretRef: postgres-password
+        volumeMounts:
+          - volumeName: posts-bigbadblogapphost-posts-data
+            mountPath: /var/lib/postgresql/data
+    scale:
+      minReplicas: 1
+tags:
+  azd-service-name: posts
+  aspire-resource-name: posts

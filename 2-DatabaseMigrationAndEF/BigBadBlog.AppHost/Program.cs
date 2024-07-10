@@ -6,9 +6,14 @@ var builder = DistributedApplication.CreateBuilder(args);
 #region Posts Database
 
 var postgresPassword = builder.AddParameter("postgresspassword", secret: true);
-var db = builder.AddPostgres(ServiceNames.DATABASE_POSTS.SERVERNAME, password: postgresPassword)
-	.WithDataVolume()
-	.AddDatabase(ServiceNames.DATABASE_POSTS.NAME);
+var dbServer = builder.AddPostgres(ServiceNames.DATABASE_POSTS.SERVERNAME, password: postgresPassword)
+	.AsAzurePostgresFlexibleServer()	
+	.WithDataVolume();
+	
+
+var db = dbServer
+.AddDatabase(ServiceNames.DATABASE_POSTS.NAME);
+
 
 var migrationService = builder.AddProject<BigBadBlog_Service_DatabaseMigration>(ServiceNames.MIGRATION)
 	.WithReference(db);
@@ -18,6 +23,7 @@ var migrationService = builder.AddProject<BigBadBlog_Service_DatabaseMigration>(
 #region Redis Cache
 
 var cache = builder.AddRedis(ServiceNames.OUTPUTCACHE, 65028)
+	.AsAzureRedis()
 	.WithRedisCommander();
 
 #endregion
