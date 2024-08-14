@@ -1,0 +1,10 @@
+# 4 - Authentication with Keycloak
+
+We set up out blog application to allow more folks to be able to work on the application system by adding a microservice with MongoDb to store content.  In this module, let's work on the process to allow more writers to login and access the application to be able to write blog posts.
+
+We'll introduce an authentication mechanism with ASP.NET Core Identity and connect that to an authentication service managed by [Keycloak](https://www.keycloak.org/)
+
+Keycloak is an open source authentication service that allows for single-sign-on and provides a dashboard to manage the users of your application.
+
+---
+[Previous Module - 3 Microservices](./3-Microservices.md) - Next Module

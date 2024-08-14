@@ -12,3 +12,6 @@ Let's assume I'm working on another team in conjunction with Arthur the Author t
 
 
 Project reference:  https://learn.microsoft.com/en-us/dotnet/api/aspire.hosting.projectresourcebuilderextensions.addproject?view=dotnet-aspire-8.0.1#aspire-hosting-projectresourcebuilderextensions-addproject(aspire-hosting-idistributedapplicationbuilder-system-string-system-string)
+
+---
+[Previous Module - 2 Working with Databases and Entity Framework](2-Database.md) - [Next Module - 4 Authentication with Keycloak](./4-Auth) 
