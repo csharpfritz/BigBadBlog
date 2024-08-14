@@ -22,6 +22,13 @@ var cache = builder.AddRedis(ServiceNames.OUTPUTCACHE, 65028)
 
 #endregion
 
+#region Keycloak Identity Server
+
+var keycloak = builder.AddKeycloak(ServiceNames.IDENTITY_SERVER.SERVERNAME, 8080);
+//	.WithRealm(ServiceNames.IDENTITY_SERVER.REALM);
+
+#endregion
+
 #region Post API
 
 var postDb = builder.AddMongoDB("postDb")

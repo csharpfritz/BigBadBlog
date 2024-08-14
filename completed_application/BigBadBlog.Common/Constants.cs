@@ -23,4 +23,15 @@ public static class ServiceNames
 
 	public const string OUTPUTCACHE = "outputcache";
 
+	/// <summary>
+	/// Connection infornation for the Keycloak server
+	/// </summary>
+	public static class IDENTITY_SERVER {
+
+		public const string SERVERNAME = "keycloak";
+		public const string REALM = "BigBadBlog";
+		public const string CLIENT = "BigBadBlog";
+
+	}
+
 }
